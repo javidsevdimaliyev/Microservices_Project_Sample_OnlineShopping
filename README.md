@@ -6,7 +6,7 @@
 <h3 align="center">OnlineShopping E-Commerce Microservices</h3>
 
   <p align="center">
-     EventBus machine centered microservices architecture based e-commerce application simulation, on .NET 8 with WebAPI, APIGateWay, Docker, Redis, RabbitMQ, MassTransit.RabbitMQ, Azure Service Bus, Ocelot, EF Core, SQL Server, MongoDB including services such as Identity, Catalog, Basket, Order, Stock, Payment  etc.
+     EventBus machine centered microservices architecture based e-commerce application simulation, on .NET 8 with WebAPI, APIGateWay, Docker, Redis, RabbitMQ, MassTransit.RabbitMQ, Azure Service Bus, Ocelot, EF Core, SQL Server, MongoDB including services such as Identity, Catalog, Basket, Order(with Domain Driven Design), Stock, Payment  etc.
   </p>
 </div>
 
