@@ -1,0 +1,219 @@
+version: '3.4'
+
+services:
+  webapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "2000:2000"
+    networks:
+      - net_frontend
+      - net_apigateway
+
+  web.apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5000:5000"
+    networks:
+      - net_apigateway
+      - net_backendservices
+
+  identityservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - ConsulConfig_Address=https://s_consul:8500
+      - ConsulConfig_ServiceAddress=https://c_identityservice:5001
+      - ConsulConfig_ServiceName=IdentityService
+      - ConsulConfig_ServiceId=Identity
+    ports:
+      - "5001:5001"
+    networks:
+      - net_backendservices
+    depends_on:
+      - web.apigateway
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+    external_links:
+      - c_graylog
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+
+  catalogservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5002
+      - ConsulConfig_Address=https://s_consul:8500
+      - ConsulConfig_ServiceAddress=https://c_catalogservice:5002
+      - ConsulConfig_ServiceName=CatalogService
+      - ConsulConfig_ServiceId=Catalog
+    ports:
+      - "5002:5002"
+    networks:
+      - net_backendservices
+    depends_on:
+      - web.apigateway
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+    external_links:
+      - c_graylog
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+
+  basketservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5003
+      - ConsulConfig_Address=https://s_consul:8500
+      - ConsulConfig_ServiceAddress=https://c_basketservice:5003
+      - ConsulConfig_ServiceName=BasketService
+      - ConsulConfig_ServiceId=Basket
+    ports:
+      - "5003:5003"
+    networks:
+      - net_backendservices
+    depends_on:
+      - web.apigateway
+      - s_consul
+      - s_rabbitmq
+      - s_redis
+    external_links:
+      - c_graylog
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+
+  orderservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5004
+      - ConsulConfig_Address=https://s_consul:8500
+      - ConsulConfig_ServiceAddress=https://c_orderservice:5004
+      - ConsulConfig_ServiceName=OrderService
+      - ConsulConfig_ServiceId=Order
+    ports:
+      - "5004:5004"
+    networks:
+      - net_backendservices
+    depends_on:
+      - web.apigateway
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+
+  stockservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5005
+      - ConsulConfig_Address=https://s_consul:8500
+      - ConsulConfig_ServiceAddress=https://c_stockservice:5005
+      - ConsulConfig_ServiceName=StockService
+      - ConsulConfig_ServiceId=Stock
+    ports:
+      - 5005:5005
+    networks:
+      - net_backendservices
+    depends_on:
+      - web.apigateway
+      - s_consul
+      - s_rabbitmq
+      - s_sqlserver
+    external_links:
+      - s_consul
+      - s_rabbitmq
+
+  paymentservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5006
+    ports:
+      - "5006:5006"
+    networks:
+      - net_backendservices
+    depends_on:
+      - s_rabbitmq
+    external_links:
+      - c_graylog
+      - s_consul
+      - s_rabbitmq
+
+
+  notificationservice:
+    tty: true
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - net_backendservices
+    depends_on:
+      - s_rabbitmq
+    external_links:
+      - c_graylog
+      - s_consul
+      - s_rabbitmq
+
+
+  s_consul:  
+    ports:
+      - 8500:8500
+      - 8600:8600/tcp
+      - 8600:8600/udp
+    networks:
+      - net_apigateway
+      - net_frontend
+      - net_backendservices
+
+  s_sqlserver:
+    # image: "mcr.microsoft.com/mssql/server"
+    user: root
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA = Y
+      - MSSQL_SA_PASSWORD = Pa$$w0rd!
+    volumes:
+      - sqlserver_data:/var/opt/mssql/data
+      - sqlserver_log:/var/opt/mssql/log
+    networks:
+      - net_backendservices
+
+  s_rabbitmq:   
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - net_backendservices
+      - net_apigateway
+      - net_frontend
+
+  s_redis:  
+    ports:
+      - 6379:6379
+    volumes:
+      - /opt/app_data/redis/:/data
+    networks:
+      - net_backendservices
+
+networks:
+  net_apigateway:
+    driver: bridge
+    external: true
+  net_frontend:
+    driver: bridge
+    external: true
+  net_backendservices:
+    driver: bridge
+    external: true
+
+volumes:
+  sqlserver_data:
+  sqlserver_log:
+  rabbitmq:
+  redis_data:

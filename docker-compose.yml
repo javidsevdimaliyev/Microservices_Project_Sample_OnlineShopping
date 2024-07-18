@@ -1,0 +1,76 @@
+version: '3.4'
+
+services:
+  orderservice.api:
+    image: ${DOCKER_REGISTRY-}orderserviceapi
+    build:
+      context: .
+      dockerfile: src\Services\OrderService\OrderService.Api\Dockerfile
+
+  basketservice.api:
+    image: ${DOCKER_REGISTRY-}basketserviceapi
+    build:
+      context: .
+      dockerfile: src\Services\BasketService\BasketService.Api\Dockerfile
+
+
+  catalogservice.api:
+    image: ${DOCKER_REGISTRY-}catalogserviceapi
+    build:
+      context: .
+      dockerfile: src\Services\CatalogService\CatalogService.Api\Dockerfile
+
+
+  identityservice.api:
+    image: ${DOCKER_REGISTRY-}identityserviceapi
+    build:
+      context: .
+      dockerfile: src\Services\IdentityService\IdentityService.Api\Dockerfile
+
+
+  paymentservice.api:
+    image: ${DOCKER_REGISTRY-}paymentserviceapi
+    build:
+      context: .
+      dockerfile: src\Services\PaymentService\PaymentService.Api\Dockerfile
+
+
+  stockservice.api:
+    image: ${DOCKER_REGISTRY-}stockserviceapi
+    build:
+      context: .
+      dockerfile: src\Services\StockService\StockService.Api\Dockerfile
+
+
+  web.apigateway:
+    image: ${DOCKER_REGISTRY-}webapigateway
+    build:
+      context: .
+      dockerfile: src\ApiGateways\WebApiGateway\Dockerfile
+
+
+  notificationservice.console:
+    image: ${DOCKER_REGISTRY-}notificationserviceconsole
+    build:
+      context: .
+      dockerfile: src\Services\NotificationService\NotificationService.Console\Dockerfile
+
+
+  s_redis:
+    container_name: c_redis
+    image: redis
+
+
+  s_rabbitmq:
+    container_name: c_rabbitmq
+    image: rabbitmq:3-management
+
+
+  s_consul:
+    container_name: c_consul
+    image: s_consul
+
+  s_sqlserver:
+    container_name: c_sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+  
