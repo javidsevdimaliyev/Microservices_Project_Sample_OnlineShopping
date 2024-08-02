@@ -156,7 +156,7 @@ public class EventBusRabbitMQ : BaseEventBus
         var channel = persistentConnection.CreateModel();
 
         channel.ExchangeDeclare(exchange: EventBusConfig.DefaultTopicName,
-                                type: "direct");
+                                type: ExchangeType.Direct);
 
         return channel;
     }

@@ -46,7 +46,13 @@ public abstract class BaseEventBus : IEventBus
         return $"{EventBusConfig.SubscriberClientAppName}.{TrimEventName(eventName)}";
     }
 
-   
+    public virtual string GetRoutingKeyName(string eventName)
+    {
+        // ToDo: Refactoring about unique routing key with topic exchange
+        return $".{TrimEventName(eventName)}";
+    }
+
+
     public async Task<bool> HandleEvent(string eventName, string message)
     {
         eventName = TrimEventName(eventName);

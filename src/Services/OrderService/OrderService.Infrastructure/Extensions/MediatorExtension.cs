@@ -18,7 +18,7 @@ public static class MediatorExtension
         domainEntities.ToList()
                       .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-        foreach ( var domainEvent in domainEvents)
+        foreach (var domainEvent in domainEvents)
         {
             await mediator.Publish(domainEvent);
         }

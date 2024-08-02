@@ -43,14 +43,12 @@ public class Order : BaseEntity<Guid>, IAggregateRoot
         OrderStatus = OrderStatusEnum.Suspend;
         OrderDate = DateTime.UtcNow;
         Address = address;
-        AddOrderStartedDomainEvent(buyerId,cartTypeId, cardNumber, 
-            CardSecurityNumber, cardHolderName, cardExpiration);
+        AddOrderStartedDomainEvent(buyerId,cartTypeId, cardNumber, CardSecurityNumber, cardHolderName, cardExpiration);
     }
 
-    private void AddOrderStartedDomainEvent(
-        int buyerId, int cartTypeId, 
-        string cardNumber, string cardSecurityNumber, 
-        string cardHolderName, DateTime cardExpiration)
+    private void AddOrderStartedDomainEvent(int buyerId, int cartTypeId, 
+                                            string cardNumber, string cardSecurityNumber, 
+                                            string cardHolderName, DateTime cardExpiration)
     {
         var orderStartedDomainEvent = new OrderStartedDomainEvent(buyerId, cartTypeId,
                                                                   cardNumber, cardSecurityNumber,

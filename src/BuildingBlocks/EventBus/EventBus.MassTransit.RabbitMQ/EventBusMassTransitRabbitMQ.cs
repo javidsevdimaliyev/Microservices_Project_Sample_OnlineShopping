@@ -37,7 +37,7 @@ namespace EventBus.MassTransit.RabbitMQ
         {
             var eventName = @event.GetType().Name;
             eventName = TrimEventName(eventName);
-            var sendEndpoint = _sendEndpointProvider.GetSendEndpoint(new Uri($"queue:{GetQueueName(eventName)}")).GetAwaiter().GetResult();
+            var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"queue:{GetQueueName(eventName)}"));
             await sendEndpoint.Send(@event);
         }
 
